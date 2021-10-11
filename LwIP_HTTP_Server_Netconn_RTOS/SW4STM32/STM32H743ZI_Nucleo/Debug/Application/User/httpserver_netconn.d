@@ -37,7 +37,38 @@ Application/User/httpserver_netconn.o: \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/apps/fs.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/apps/httpd_opts.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/iana.h \
- ../../../Inc/httpserver_netconn.h
+ ../../../Inc/httpserver_netconn.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/netif.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/stats.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/mem.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/memp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_std.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_priv.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/mem_priv.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/timeouts.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/tcpbase.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip4.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip4.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip6.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/icmp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/icmp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/udp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/udp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/netif/etharp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/etharp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ethernet.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ieee.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/etharp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/netif/ethernet.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/dhcp.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/netdb.h
 
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/opt.h:
 
@@ -114,3 +145,65 @@ Application/User/httpserver_netconn.o: \
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/iana.h:
 
 ../../../Inc/httpserver_netconn.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/netif.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/stats.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/mem.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/memp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_std.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/memp_priv.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/mem_priv.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/tcpip.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/timeouts.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/tcp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/tcpbase.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip4.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip4.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip6.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/icmp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/icmp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/udp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/udp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/netif/etharp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/etharp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ethernet.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ieee.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/etharp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/netif/ethernet.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/dhcp.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/netdb.h:

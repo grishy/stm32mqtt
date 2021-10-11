@@ -41,6 +41,8 @@ Middlewares/LwIP/Core/init.o: \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip6_addr.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/def.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip4.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ip4.h \
@@ -150,6 +152,10 @@ Middlewares/LwIP/Core/init.o: \
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/def.h:
 
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h:
 
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/ip.h:
 

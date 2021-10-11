@@ -63,6 +63,9 @@ Middlewares/LwIP/Core/memp.o: \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/api_msg.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/igmp.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/sockets_priv.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h \
+ ../../../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/etharp.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ethernet.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/prot/ieee.h \
@@ -199,6 +202,12 @@ Middlewares/LwIP/Core/memp.o: \
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/igmp.h:
 
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/priv/sockets_priv.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/sockets.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/inet.h:
+
+../../../Middlewares/Third_Party/LwIP/src/include/lwip/errno.h:
 
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/etharp.h:
 

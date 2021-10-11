@@ -1,3 +1,5 @@
-httpserver_netconn.c:271:6:http_server_netconn_init	16	static
-httpserver_netconn.c:282:6:DynWebPage	552	static
-httpserver_netconn.c:231:13:http_server_netconn_thread	80	static
+httpserver_netconn.c:164:13:http_server_serve	64	static
+httpserver_netconn.c:243:13:http_server_netconn_thread	32	static
+httpserver_netconn.c:288:13:vTCP_Client_Task	120	static
+httpserver_netconn.c:362:6:http_server_netconn_init	16	static
+httpserver_netconn.c:374:6:DynWebPage	568	static

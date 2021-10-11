@@ -25,6 +25,18 @@
 #include "string.h"
 #include "httpserver_netconn.h"
 #include "cmsis_os.h"
+#include "lwipopts.h"
+#include "lwip/sockets.h"
+
+#include "lwip/api.h"
+#include "lwip/tcpip.h"
+#include "lwip/memp.h"
+#include "lwip/tcp.h"
+#include "lwip/udp.h"
+#include "netif/etharp.h"
+#include "lwip/dhcp.h"
+#include "lwip/sockets.h"
+#include "lwip/netdb.h"
 
 #include <stdio.h>
 
@@ -263,20 +275,100 @@ static void http_server_netconn_thread(void *arg)
   }
 }
 
+#define TCP_PORT   80
+#define TCP_IP    "www.google.es"
+
+/* @brief TCP Client task
+ *
+ * This task gets and configures a socket to get the header of google web site
+ * using HTTP protocol.
+ *
+ * @param param
+ */
+static void vTCP_Client_Task(void *param) {
+ /* Variables */
+ const char host[] = TCP_IP;
+ int ret;
+ struct sockaddr_in sin;
+ struct hostent *phe;
+ char *lhost;
+ char *pnum;
+ /* TCP Data buffer */
+ static uint8_t data_buffer[1000];
+ /* ID Client */
+ int CControl;
+ /* HTTP method: HEAD */
+ uint8_t http_head[]="HEAD / HTTP/1.0\r\nHost:www.google.es\r\n\r\n\r\n";
+ /* Counter request */
+ uint8_t counter_request = 0;
+ for(;;){
+  /* Fill structure */
+  memset(&sin,0,sizeof(sin));
+  sin.sin_family = AF_INET;
+  sin.sin_port = htons(TCP_PORT);
+
+  if ((sin.sin_addr.s_addr = inet_addr(lhost)) == -1) {
+   if ((phe = gethostbyname(lhost)) == NULL) {
+    /* Impossible get host name */
+    for(;;);
+   }
+   memcpy((char *)&sin.sin_addr, phe->h_addr, phe->h_length);
+  }
+  /* Free unnecessary memory */
+  vPortFree(lhost);
+  /* Get socket */
+  CControl = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+  if (CControl == -1) {
+   /* Impossible get a socket */
+   for(;;);
+  }
+  vTaskDelay(1000/portTICK_RATE_MS);
+  /* Connect to remote TCP server */
+  ret = connect(CControl, (struct sockaddr *)&sin, sizeof(sin));
+  if (ret == -1) {
+   /* Close socket */
+   closesocket(CControl);
+   /* Impossible connect to remote TCP server */
+   for(;;);
+  }
+  /* Request HTTP: HEAD */
+  ret = send(CControl, http_head, sizeof(http_head), 0);
+  if (ret != sizeof(http_head)){
+   /* Error: repeat sending */
+   for(;;);
+  }
+  /* Check answer */
+  do{
+   /* Reset buffer */
+   memset(data_buffer, 0x00, sizeof(data_buffer));
+   /* Read socket */
+   ret = read(CControl, data_buffer, 1000);
+   /* Debug message */
+  }while(ret != 0);
+  /* Close connection */
+  closesocket(CControl);
+  /* Wait for next request */
+  vTaskDelay(2000/portTICK_RATE_MS);
+ }
+}
+
+
+
 /**
-  * @brief  Initialize the HTTP server (start its thread) 
+  * @brief  Initialize the HTTP server (start its thread)
   * @param  none
   * @retval None
   */
 void http_server_netconn_init()
 {
   sys_thread_new("HTTP", http_server_netconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+  sys_thread_new("TCP_Client_Task", vTCP_Client_Task, NULL, DEFAULT_THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
 }
 
 /**
-  * @brief  Create and send a dynamic Web Page. This page contains the list of 
-  *         running tasks and the number of page hits. 
-  * @param  conn pointer on connection structure 
+  * @brief  Create and send a dynamic Web Page. This page contains the list of
+  *         running tasks and the number of page hits.
+  * @param  conn pointer on connection structure
   * @retval None
   */
 void DynWebPage(struct netconn *conn)
@@ -292,7 +384,7 @@ void DynWebPage(struct netconn *conn)
   strcat(PAGE_BODY, pagehits);
   strcat((char *)PAGE_BODY, "<pre><br>Name          State  Priority  Stack   Num" );
   strcat((char *)PAGE_BODY, "<br>---------------------------------------------<br>");
-    
+
   /* The list of tasks and their status */
   osThreadList((unsigned char *)(PAGE_BODY + strlen(PAGE_BODY)));
   strcat((char *)PAGE_BODY, "<br><br>---------------------------------------------");
@@ -302,5 +394,6 @@ void DynWebPage(struct netconn *conn)
   netconn_write(conn, PAGE_START, strlen((char*)PAGE_START), NETCONN_COPY);
   netconn_write(conn, PAGE_BODY, strlen(PAGE_BODY), NETCONN_COPY);
 }
+
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
