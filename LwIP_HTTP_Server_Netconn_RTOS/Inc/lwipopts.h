@@ -112,7 +112,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_WND                 (2*TCP_MSS)
 
 /* ---------- DNS options ---------- */
-#define LWIP_DNS                        1
+#define LWIP_DNS                        0
 
 /* ---------- ICMP options ---------- */
 #define LWIP_ICMP                       1

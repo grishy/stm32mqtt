@@ -37,6 +37,17 @@
 #include "lwip/dhcp.h"
 #include "lwip/sockets.h"
 #include "lwip/netdb.h"
+#include "main.h"
+#include "cmsis_os.h"
+#include "ethernetif.h"
+#include "lwip/netif.h"
+#include "lwip/tcpip.h"
+#include "httpserver_netconn.h"
+#include "app_ethernet.h"
+#include "lwip/ip4_addr.h"
+#include "lwip/ip6_addr.h"
+#include "stm32h7xx_hal.h"
+#include "stm32h7xx_nucleo.h"
 
 #include <stdio.h>
 
@@ -286,70 +297,56 @@ static void http_server_netconn_thread(void *arg)
  * @param param
  */
 static void vTCP_Client_Task(void *param) {
- /* Variables */
- const char host[] = TCP_IP;
- int ret;
- struct sockaddr_in sin;
- struct hostent *phe;
- char *lhost;
- char *pnum;
- /* TCP Data buffer */
- static uint8_t data_buffer[1000];
- /* ID Client */
- int CControl;
- /* HTTP method: HEAD */
- uint8_t http_head[]="HEAD / HTTP/1.0\r\nHost:www.google.es\r\n\r\n\r\n";
- /* Counter request */
- uint8_t counter_request = 0;
- for(;;){
-  /* Fill structure */
-  memset(&sin,0,sizeof(sin));
-  sin.sin_family = AF_INET;
-  sin.sin_port = htons(TCP_PORT);
+	struct netconn *xNetConn = NULL;
 
-  if ((sin.sin_addr.s_addr = inet_addr(lhost)) == -1) {
-   if ((phe = gethostbyname(lhost)) == NULL) {
-    /* Impossible get host name */
-    for(;;);
-   }
-   memcpy((char *)&sin.sin_addr, phe->h_addr, phe->h_length);
-  }
-  /* Free unnecessary memory */
-  vPortFree(lhost);
-  /* Get socket */
-  CControl = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-  if (CControl == -1) {
-   /* Impossible get a socket */
-   for(;;);
-  }
-  vTaskDelay(1000/portTICK_RATE_MS);
-  /* Connect to remote TCP server */
-  ret = connect(CControl, (struct sockaddr *)&sin, sizeof(sin));
-  if (ret == -1) {
-   /* Close socket */
-   closesocket(CControl);
-   /* Impossible connect to remote TCP server */
-   for(;;);
-  }
-  /* Request HTTP: HEAD */
-  ret = send(CControl, http_head, sizeof(http_head), 0);
-  if (ret != sizeof(http_head)){
-   /* Error: repeat sending */
-   for(;;);
-  }
-  /* Check answer */
-  do{
-   /* Reset buffer */
-   memset(data_buffer, 0x00, sizeof(data_buffer));
-   /* Read socket */
-   ret = read(CControl, data_buffer, 1000);
-   /* Debug message */
-  }while(ret != 0);
-  /* Close connection */
-  closesocket(CControl);
-  /* Wait for next request */
-  vTaskDelay(2000/portTICK_RATE_MS);
- }
+	struct ip4_addr local_ip;
+	struct ip4_addr remote_ip;
+	int rc1, rc2;
+
+	xNetConn = netconn_new ( NETCONN_TCP );
+
+	if ( xNetConn == NULL ) {
+
+	 /* No memory for new connection? */
+	 return;
+	}
+
+	IP_ADDR4(&local_ip,IP_ADDR0,IP_ADDR1,IP_ADDR2,IP_ADDR3);
+
+	rc1 = netconn_bind ( xNetConn, &local_ip, 0 );
+
+	IP_ADDR4(&remote_ip, IP_SERVER_ADDR0, IP_SERVER_ADDR1, IP_SERVER_ADDR2, IP_SERVER_ADDR3);
+
+	rc2 = netconn_connect ( xNetConn, &remote_ip, IP_SERVER_PORT);
+
+	if ( rc1 != ERR_OK || rc2 != ERR_OK )
+	{
+
+	  netconn_delete ( xNetConn );
+	  return;
+	}
+
+	char peer0_0[] = { /* Packet 5 */
+	0x10, 0x0c, 0x00, 0x04, 0x4d, 0x51, 0x54, 0x54,
+	0x04, 0x02, 0x00, 0x1e, 0x00, 0x00 };
+    char peer0_1[] = { /* Packet 9 */
+    0x30, 0x15, 0x00, 0x0a, 0x74, 0x6f, 0x70, 0x69,
+    0x63, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x4d, 0x65,
+    0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30 };
+    char peer0_2[] = { /* Packet 13 */
+    0x30, 0x15, 0x00, 0x0a, 0x74, 0x6f, 0x70, 0x69,
+    0x63, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x4d, 0x65,
+    0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x31 };
+    char peer0_3[] = { /* Packet 17 */
+    0xe0, 0x00 };
+
+    netconn_write(xNetConn, peer0_0, sizeof(peer0_0), NETCONN_COPY);
+    netconn_write(xNetConn, peer0_1, sizeof(peer0_1), NETCONN_COPY);
+    netconn_write(xNetConn, peer0_2, sizeof(peer0_2), NETCONN_COPY);
+    netconn_write(xNetConn, peer0_3, sizeof(peer0_3), NETCONN_COPY);
+
+    /* take down the connection conn */
+	netconn_close(xNetConn);
 }
 
 

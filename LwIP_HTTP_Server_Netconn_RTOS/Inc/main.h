@@ -50,7 +50,16 @@
 #define GW_ADDR2   0
 #define GW_ADDR3   1
 
-/* Exported macro ------------------------------------------------------------*/
+/*Static Server ADDRESS*/
+#define IP_SERVER_ADDR0   169
+#define IP_SERVER_ADDR1   254
+#define IP_SERVER_ADDR2   71
+#define IP_SERVER_ADDR3   20
+
+/*Static Server ADDRESS*/
+#define IP_SERVER_PORT   1883
+
+ /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */  
 
 
