@@ -1,5 +1,9 @@
-httpserver_netconn.c:175:13:http_server_serve	64	static
-httpserver_netconn.c:254:13:http_server_netconn_thread	32	static
-httpserver_netconn.c:299:13:vTCP_Client_Task	120	static
-httpserver_netconn.c:359:6:http_server_netconn_init	16	static
-httpserver_netconn.c:371:6:DynWebPage	568	static
+httpserver_netconn.c:176:13:http_server_serve	64	static
+httpserver_netconn.c:255:13:http_server_netconn_thread	32	static
+httpserver_netconn.c:291:7:send_connection_cmd	48	static
+httpserver_netconn.c:320:7:send_msg_pressed	72	static
+httpserver_netconn.c:347:7:send_msg_not_pressed	72	static
+httpserver_netconn.c:375:7:send_disconnect	32	static
+httpserver_netconn.c:396:13:vTCP_MQTT_Client_Task	40	static
+httpserver_netconn.c:453:6:http_server_netconn_init	16	static
+httpserver_netconn.c:465:6:DynWebPage	568	static

@@ -54,6 +54,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define WEBSERVER_THREAD_PRIO    ( osPriorityAboveNormal )
+#define MQTT_THREAD_PRIO         ( osPriorityHigh )
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -286,8 +287,104 @@ static void http_server_netconn_thread(void *arg)
   }
 }
 
-#define TCP_PORT   80
-#define TCP_IP    "www.google.es"
+
+err_t send_connection_cmd(struct netconn *conn){
+	// MQ Telemetry Transport Protocol, Connect Command
+	//     Header Flags: 0x10, Message Type: Connect Command
+	//         0001 .... = Message Type: Connect Command (1)
+	//         .... 0000 = Reserved: 0
+	//     Msg Len: 12
+	//     Protocol Name Length: 4
+	//     Protocol Name: MQTT
+	//     Version: MQTT v3.1.1 (4)
+	//     Connect Flags: 0x02, QoS Level: At most once delivery (Fire and Forget), Clean Session Flag
+	//         0... .... = User Name Flag: Not set
+	//         .0.. .... = Password Flag: Not set
+	//         ..0. .... = Will Retain: Not set
+	//         ...0 0... = QoS Level: At most once delivery (Fire and Forget) (0)
+	//         .... .0.. = Will Flag: Not set
+	//         .... ..1. = Clean Session Flag: Set
+	//         .... ...0 = (Reserved): Not set
+	//     Keep Alive: 30
+	//     Client ID Length: 0
+	//     Client ID:
+
+	char dataptr[] = {
+	0x10, 0x0c, 0x00, 0x04, 0x4d, 0x51, 0x54, 0x54,
+	0x04, 0x02, 0x00, 0x1e, 0x00, 0x00 };
+
+	return netconn_write(conn, dataptr, sizeof(dataptr), NETCONN_COPY);
+}
+
+
+err_t send_msg_pressed(struct netconn *conn){
+	// MQ Telemetry Transport Protocol, Publish Message
+	//     [Expert Info (Note/Protocol): Unknown version (missing the CONNECT packet?)]
+	//         [Unknown version (missing the CONNECT packet?)]
+	//         [Severity level: Note]
+	//         [Group: Protocol]
+	//     Header Flags: 0x30, Message Type: Publish Message, QoS Level: At most once delivery (Fire and Forget)
+	//         0011 .... = Message Type: Publish Message (3)
+	//         .... 0... = DUP Flag: Not set
+	//         .... .00. = QoS Level: At most once delivery (Fire and Forget) (0)
+	//         .... ...0 = Retain: Not set
+	//     Msg Len: 32
+	//     Topic Length: 11
+	//     Topic: topic/board
+	//     Message: USER button pressed
+
+
+	char dataptr[] = {
+	0x30, 0x20, 0x00, 0x0b, 0x74, 0x6f, 0x70, 0x69,
+	0x63, 0x2f, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x55,
+	0x53, 0x45, 0x52, 0x20, 0x62, 0x75, 0x74, 0x74,
+	0x6f, 0x6e, 0x20, 0x70, 0x72, 0x65, 0x73, 0x73,
+	0x65, 0x64 };
+
+	return netconn_write(conn, dataptr, sizeof(dataptr), NETCONN_COPY);
+}
+
+err_t send_msg_not_pressed(struct netconn *conn){
+	// MQ Telemetry Transport Protocol, Publish Message
+	//     [Expert Info (Note/Protocol): Unknown version (missing the CONNECT packet?)]
+	//         [Unknown version (missing the CONNECT packet?)]
+	//         [Severity level: Note]
+	//         [Group: Protocol]
+	//     Header Flags: 0x30, Message Type: Publish Message, QoS Level: At most once delivery (Fire and Forget)
+	//         0011 .... = Message Type: Publish Message (3)
+	//         .... 0... = DUP Flag: Not set
+	//         .... .00. = QoS Level: At most once delivery (Fire and Forget) (0)
+	//         .... ...0 = Retain: Not set
+	//     Msg Len: 36
+	//     Topic Length: 11
+	//     Topic: topic/board
+	//     Message: USER button NOT pressed
+
+
+	char dataptr[] = {
+	0x30, 0x24, 0x00, 0x0b, 0x74, 0x6f, 0x70, 0x69,
+	0x63, 0x2f, 0x62, 0x6f, 0x61, 0x72, 0x64, 0x55,
+	0x53, 0x45, 0x52, 0x20, 0x62, 0x75, 0x74, 0x74,
+	0x6f, 0x6e, 0x20, 0x4e, 0x4f, 0x54, 0x20, 0x70,
+	0x72, 0x65, 0x73, 0x73, 0x65, 0x64 };
+
+
+	return netconn_write(conn, dataptr, sizeof(dataptr), NETCONN_COPY);
+}
+
+err_t send_disconnect(struct netconn *conn){
+	// MQ Telemetry Transport Protocol, Disconnect Req
+	//     Header Flags: 0xe0, Message Type: Disconnect Req
+	//         1110 .... = Message Type: Disconnect Req (14)
+	//         .... 0000 = Reserved: 0
+	//     Msg Len: 0
+
+	char dataptr[] = {
+	0xe0, 0x00 };
+
+    return netconn_write(conn, dataptr, sizeof(dataptr), NETCONN_COPY);
+}
+
 
 /* @brief TCP Client task
  *
@@ -296,7 +393,7 @@ static void http_server_netconn_thread(void *arg)
  *
  * @param param
  */
-static void vTCP_Client_Task(void *param) {
+static void vTCP_MQTT_Client_Task(void *param) {
 	struct netconn *xNetConn = NULL;
 
 	struct ip4_addr local_ip;
@@ -326,24 +423,21 @@ static void vTCP_Client_Task(void *param) {
 	  return;
 	}
 
-	char peer0_0[] = { /* Packet 5 */
-	0x10, 0x0c, 0x00, 0x04, 0x4d, 0x51, 0x54, 0x54,
-	0x04, 0x02, 0x00, 0x1e, 0x00, 0x00 };
-    char peer0_1[] = { /* Packet 9 */
-    0x30, 0x15, 0x00, 0x0a, 0x74, 0x6f, 0x70, 0x69,
-    0x63, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x4d, 0x65,
-    0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x30 };
-    char peer0_2[] = { /* Packet 13 */
-    0x30, 0x15, 0x00, 0x0a, 0x74, 0x6f, 0x70, 0x69,
-    0x63, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x4d, 0x65,
-    0x73, 0x73, 0x61, 0x67, 0x65, 0x20, 0x31 };
-    char peer0_3[] = { /* Packet 17 */
-    0xe0, 0x00 };
+	send_connection_cmd(xNetConn);
 
-    netconn_write(xNetConn, peer0_0, sizeof(peer0_0), NETCONN_COPY);
-    netconn_write(xNetConn, peer0_1, sizeof(peer0_1), NETCONN_COPY);
-    netconn_write(xNetConn, peer0_2, sizeof(peer0_2), NETCONN_COPY);
-    netconn_write(xNetConn, peer0_3, sizeof(peer0_3), NETCONN_COPY);
+	for(int i = 0; i < 40;i++) {
+		// read button state
+		if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)) {
+			send_msg_pressed(xNetConn);
+		} else {
+			send_msg_not_pressed(xNetConn);
+		}
+
+		vTaskDelay(200/portTICK_RATE_MS);
+
+	}
+
+	send_disconnect(xNetConn);
 
     /* take down the connection conn */
 	netconn_close(xNetConn);
@@ -359,7 +453,7 @@ static void vTCP_Client_Task(void *param) {
 void http_server_netconn_init()
 {
   sys_thread_new("HTTP", http_server_netconn_thread, NULL, DEFAULT_THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
-  sys_thread_new("TCP_Client_Task", vTCP_Client_Task, NULL, DEFAULT_THREAD_STACKSIZE, WEBSERVER_THREAD_PRIO);
+  sys_thread_new("vTCP_MQTT_Client_Task", vTCP_MQTT_Client_Task, NULL, DEFAULT_THREAD_STACKSIZE, MQTT_THREAD_PRIO);
 }
 
 /**

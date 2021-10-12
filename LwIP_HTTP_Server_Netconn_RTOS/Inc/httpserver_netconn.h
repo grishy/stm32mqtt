@@ -22,8 +22,14 @@
 
 #include "lwip/api.h"
 
+
 void http_server_netconn_init(void);
 void DynWebPage(struct netconn *conn);
+
+err_t send_connection_cmd(struct netconn *conn);
+err_t send_msg_pressed(struct netconn *conn);
+err_t send_msg_not_pressed(struct netconn *conn);
+err_t send_disconnect(struct netconn *conn);
 
 #endif /* __HTTPSERVER_NETCONN_H__ */
 

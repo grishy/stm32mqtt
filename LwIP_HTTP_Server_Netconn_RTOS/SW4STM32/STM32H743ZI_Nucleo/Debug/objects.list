@@ -1,6 +1,7 @@
 "./Application/SW4STM32/startup_stm32h743xx.o"
 "./Application/User/app_ethernet.o"
 "./Application/User/ethernetif.o"
+"./Application/User/gpio.o"
 "./Application/User/httpserver_netconn.o"
 "./Application/User/main.o"
 "./Application/User/stm32h7xx_hal_timebase_tim.o"

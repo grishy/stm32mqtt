@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 )
@@ -39,11 +38,6 @@ func main() {
 }
 
 func publish(client mqtt.Client) {
-	num := 2
-	for i := 0; i < num; i++ {
-		text := fmt.Sprintf("Message %d", i)
-		token := client.Publish("topic/test", 0, false, text)
-		token.Wait()
-		time.Sleep(time.Second)
-	}
+	token := client.Publish("topic/board", 0, false, "USER button NOT pressed")
+	token.Wait()
 }

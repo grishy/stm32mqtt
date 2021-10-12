@@ -90,7 +90,7 @@ Application/User/main.o: \
  ../../../Inc/httpserver_netconn.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/api.h \
  ../../../Middlewares/Third_Party/LwIP/src/include/lwip/netbuf.h \
- ../../../Inc/app_ethernet.h
+ ../../../Inc/app_ethernet.h ../../../Inc/gpio.h ../../../Inc/main.h
 
 ../../../Inc/main.h:
 
@@ -273,3 +273,7 @@ Application/User/main.o: \
 ../../../Middlewares/Third_Party/LwIP/src/include/lwip/netbuf.h:
 
 ../../../Inc/app_ethernet.h:
+
+../../../Inc/gpio.h:
+
+../../../Inc/main.h:

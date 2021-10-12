@@ -28,6 +28,7 @@
 #include "lwip/tcpip.h"
 #include "httpserver_netconn.h"
 #include "app_ethernet.h"
+#include "gpio.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -69,6 +70,7 @@ int main(void)
   SystemClock_Config(); 
   
   /* Configure the LCD ...*/
+  MX_GPIO_Init();
   BSP_Config();
   
   /* Init thread */
