@@ -1,7 +1,7 @@
 main.c:54:5:main	40	static
-main.c:92:13:StartThread	16	static
-main.c:115:13:BSP_Config	8	static
-main.c:126:13:Netif_Config	64	static
-main.c:186:13:SystemClock_Config	128	static
-main.c:251:13:MPU_Config	24	static
-main.c:299:13:CPU_CACHE_Enable	24	static,ignoring_inline_asm
+main.c:95:13:StartThread	16	static
+main.c:118:13:BSP_Config	8	static
+main.c:129:13:Netif_Config	64	static
+main.c:189:13:SystemClock_Config	128	static
+main.c:254:13:MPU_Config	24	static
+main.c:302:13:CPU_CACHE_Enable	24	static,ignoring_inline_asm

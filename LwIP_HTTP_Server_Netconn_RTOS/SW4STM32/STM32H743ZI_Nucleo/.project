@@ -46,14 +46,14 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Src/ethernetif.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/httpserver_netconn.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Src/httpserver_netconn.c</locationURI>
-		</link>
-		<link>
 			<name>Application/User/main.c</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Src/main.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/server_netconn.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Src/httpserver_netconn.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/stm32h7xx_hal_timebase_tim.c</name>
